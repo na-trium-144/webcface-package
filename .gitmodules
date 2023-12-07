@@ -1,0 +1,6 @@
+[submodule "webcface-tools"]
+	path = webcface-tools
+	url = ../webcface-tools.git
+[submodule "webcface"]
+	path = webcface
+	url = ../webcface.git

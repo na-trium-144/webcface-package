@@ -1,0 +1,7 @@
+dist/
+*.tar.gz
+*.tmp
+.vs/
+build/
+out/
+CMakeSettings.json
