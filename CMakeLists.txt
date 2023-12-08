@@ -8,6 +8,8 @@ add_compile_options(/utf-8)
 
 set(WEBCFACE_INSTALL on CACHE INTERNAL "" FORCE)
 set(WEBCFACE_EXAMPLE on CACHE INTERNAL "" FORCE)
+set(WEBCFACE_VERSION_SUFFIX ${ARCH} CACHE INTERNAL "" FORCE)
+set(WEBCFACE_TOOLS_VERSION_SUFFIX ${ARCH} CACHE INTERNAL "" FORCE)
 add_subdirectory(webcface)
 add_subdirectory(webcface-tools)
 
