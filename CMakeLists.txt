@@ -10,47 +10,51 @@ set(WEBCFACE_INSTALL on CACHE INTERNAL "" FORCE)
 set(WEBCFACE_EXAMPLE on CACHE INTERNAL "" FORCE)
 set(WEBCFACE_VERSION_SUFFIX ${ARCH} CACHE INTERNAL "" FORCE)
 set(WEBCFACE_TOOLS_VERSION_SUFFIX ${ARCH} CACHE INTERNAL "" FORCE)
-add_subdirectory(webcface)
-add_subdirectory(webcface-tools)
+set(WEBCFACE_DOWNLOAD_WEBUI off CACHE INTERNAL "" FORCE)
+
+include(FetchContent)
+
+FetchContent_Declare(webcface
+    GIT_REPOSITORY https://github.com/na-trium-144/webcface.git
+    GIT_TAG v1.2.1
+)
+FetchContent_Declare(webcface-tools
+    GIT_REPOSITORY https://github.com/na-trium-144/webcface-tools.git
+    GIT_TAG v1.1.7
+)
+FetchContent_MakeAvailable(webcface webcface-tools)
+
+set(WEBUI_VERSION 1.0.10)
 
 get_directory_property(WEBCFACE_VERSION_ORG
-    DIRECTORY webcface
+    DIRECTORY ${webcface_SOURCE_DIR}
     DEFINITION PROJECT_VERSION
 )
 get_directory_property(WEBCFACE_VERSION_MAJOR
-    DIRECTORY webcface
+    DIRECTORY ${webcface_SOURCE_DIR}
     DEFINITION PROJECT_VERSION_MAJOR
 )
 get_directory_property(WEBCFACE_VERSION_MINOR
-    DIRECTORY webcface
+    DIRECTORY ${webcface_SOURCE_DIR}
     DEFINITION PROJECT_VERSION_MINOR
 )
 get_directory_property(WEBCFACE_VERSION_REVISION
-    DIRECTORY webcface
+    DIRECTORY ${webcface_SOURCE_DIR}
     DEFINITION PROJECT_VERSION_PATCH
 )
 get_directory_property(WEBCFACE_EXAMPLE_TARGETS_CPACK
-    DIRECTORY webcface
+    DIRECTORY ${webcface_SOURCE_DIR}
     DEFINITION WEBCFACE_EXAMPLE_TARGETS_CPACK
 )
 
 # 同じバージョンで再ビルドするとき -1 など
 set(WIN_PACKAGE_VERSION "${WEBCFACE_VERSION_ORG}")
 
-set(WEBUI_VERSION 1.0.10)
-file(TO_NATIVE_PATH
-    ${CMAKE_CURRENT_LIST_DIR}\\webui.tar.gz
-    DOWNLOAD_DEST
+FetchContent_Declare(webui
+    URL https://github.com/na-trium-144/webcface-webui/releases/download/v${WEBUI_VERSION}/webcface-webui_${WEBUI_VERSION}.tar.gz
+    SOURCE_DIR ${CMAKE_CURRENT_BINARY_DIR}/dist
 )
-add_custom_target(download-webui ALL
-    COMMAND bitsadmin /transfer download-webui 
-        https://github.com/na-trium-144/webcface-webui/releases/download/v${WEBUI_VERSION}/webcface-webui_${WEBUI_VERSION}.tar.gz
-        ${DOWNLOAD_DEST}
-    COMMAND tar -xvf webui.tar.gz
-    COMMAND del webui.tar.gz
-    VERBATIM
-    WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}
-)
+FetchContent_Populate(webui)
 
 install(DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/dist
     DESTINATION share/webcface
@@ -79,7 +83,7 @@ set(CPACK_INSTALL_DEFAULT_DIRECTORY_PERMISSIONS
     GROUP_READ GROUP_EXECUTE
     WORLD_READ WORLD_EXECUTE
 )
-set(CPACK_RESOURCE_FILE_LICENSE ${CMAKE_CURRENT_LIST_DIR}/webcface/LICENSE)
+set(CPACK_RESOURCE_FILE_LICENSE ${webcface_SOURCE_DIR}/LICENSE)
 
 set(CPACK_NSIS_DISPLAY_NAME "WebCFace ${WIN_PACKAGE_VERSION}")
 set(CPACK_NSIS_MODIFY_PATH on)
