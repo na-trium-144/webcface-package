@@ -52,7 +52,7 @@ set(WIN_PACKAGE_VERSION "${WEBCFACE_VERSION_ORG}")
 
 FetchContent_Declare(webui
     URL https://github.com/na-trium-144/webcface-webui/releases/download/v${WEBUI_VERSION}/webcface-webui_${WEBUI_VERSION}.tar.gz
-    SOURCE_DIR ${CMAKE_CURRENT_BINARY_DIR}/dist
+    SOURCE_DIR ${CMAKE_CURRENT_LIST_DIR}/dist
 )
 FetchContent_Populate(webui)
 
