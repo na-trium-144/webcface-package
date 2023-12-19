@@ -16,7 +16,7 @@ include(FetchContent)
 
 FetchContent_Declare(webcface
     GIT_REPOSITORY https://github.com/na-trium-144/webcface.git
-    GIT_TAG v1.2.1
+    GIT_TAG v1.2.2
 )
 FetchContent_Declare(webcface-tools
     GIT_REPOSITORY https://github.com/na-trium-144/webcface-tools.git
@@ -24,7 +24,7 @@ FetchContent_Declare(webcface-tools
 )
 FetchContent_MakeAvailable(webcface webcface-tools)
 
-set(WEBUI_VERSION 1.0.10)
+set(WEBUI_VERSION 1.0.11)
 
 get_directory_property(WEBCFACE_VERSION_ORG
     DIRECTORY ${webcface_SOURCE_DIR}
