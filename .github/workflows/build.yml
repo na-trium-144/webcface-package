@@ -6,15 +6,11 @@ on:
   push:
     tags: []
 
-env:
-  # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
-  BUILD_TYPE: Release
-
 jobs:
   build:
     strategy:
       matrix:
-        arch: [Win32, x64]
+        arch: [x64]
     runs-on: windows-2019
     steps:
     - uses: actions/checkout@v4
@@ -27,14 +23,35 @@ jobs:
         scoop update
         scoop bucket add extras
         scoop install nsis
-    - name: Configure CMake
+    - name: Install OpenCV
+      # if: matrix.dep == 'with-opencv'
+      uses: crazy-max/ghaction-chocolatey@v3
+      with:
+        args: install -y opencv
+    - name: Add opencv to path
+      # if: matrix.dep == 'with-opencv'
+      run: echo "c:\tools\opencv\build\x64\vc16\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+    
+    - name: Configure CMake Debug
       run: >
         cmake -B ${{github.workspace}}/build
         -A${{matrix.arch}}
         -DARCH=${{matrix.arch}}
-        -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
-    - name: Build
-      run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
+        -DCMAKE_BUILD_TYPE=Debug
+        -DCMAKE_PREFIX_PATH=c:\tools\opencv\build\x64\vc16\lib
+        -DCMAKE_INSTALL_PREFIX=${{github.workspace}}/install_debug
+    - name: Build and Install Debug
+      run: cmake --build ${{github.workspace}}/build --config Debug -t install
+    - name: Configure CMake Release
+      run: >
+        cmake -B ${{github.workspace}}/build
+        -A${{matrix.arch}}
+        -DARCH=${{matrix.arch}}
+        -DCMAKE_BUILD_TYPE=Release
+        -DCMAKE_PREFIX_PATH=c:\tools\opencv\build\x64\vc16\lib
+        -DCMAKE_INSTALL_PREFIX=${{github.workspace}}/install_release
+    - name: Build and Install Release
+      run: cmake --build ${{github.workspace}}/build --config Release
     - name: Create NSIS Package
       working-directory: ${{github.workspace}}/build
       run: cpack -G NSIS

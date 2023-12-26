@@ -16,13 +16,44 @@ include(FetchContent)
 
 FetchContent_Declare(webcface
     GIT_REPOSITORY https://github.com/na-trium-144/webcface.git
-    GIT_TAG v1.2.2
+    GIT_TAG image
 )
+FetchContent_MakeAvailable(webcface)
+
+if(CMAKE_BUILD_TYPE STREQUAL Release)
+
+# Debugを ./install_debug にインストールした後に Releaseのcmake, build, installをする
+set(WEBCFACE_INSTALL_DEBUG ${CMAKE_CURRENT_LIST_DIR}/install_debug)
+install(FILES
+    ${WEBCFACE_INSTALL_DEBUG}/bin/webcfaced.dll
+    ${WEBCFACE_INSTALL_DEBUG}/bin/spdlogd.dll
+    DESTINATION bin
+)
+install(DIRECTORY ${WEBCFACE_INSTALL_DEBUG}/lib/
+    DESTINATION lib
+)
+
+install(DIRECTORY ${OpenCV_DIR}/../bin/
+    DESTINATION bin
+)
+install(DIRECTORY ${OpenCV_DIR}/
+    DESTINATION lib
+)
+install(DIRECTORY ${OpenCV_DIR}/../../../include/
+    DESTINATION include
+)
+install(DIRECTORY ${OpenCV_DIR}/../../../etc/
+    DESTINATION share/webcface/3rd-party/opencv
+)
+install(FILES ${OpenCV_DIR}/../../../LICENSE
+    DESTINATION share/webcface/3rd-party/opencv
+)
+
 FetchContent_Declare(webcface-tools
     GIT_REPOSITORY https://github.com/na-trium-144/webcface-tools.git
     GIT_TAG v1.1.7
 )
-FetchContent_MakeAvailable(webcface webcface-tools)
+FetchContent_MakeAvailable(webcface-tools)
 
 set(WEBUI_VERSION 1.0.12)
 
@@ -86,7 +117,10 @@ set(CPACK_INSTALL_DEFAULT_DIRECTORY_PERMISSIONS
 set(CPACK_RESOURCE_FILE_LICENSE ${webcface_SOURCE_DIR}/LICENSE)
 
 set(CPACK_NSIS_DISPLAY_NAME "WebCFace ${WIN_PACKAGE_VERSION}")
+set(CPACK_NSIS_PACKAGE_NAME "WebCFace")
 set(CPACK_NSIS_MODIFY_PATH on)
 set(CPACK_NSIS_ENABLE_UNINSTALL_BEFORE_INSTALL on)
 
 include(CPack)
+
+endif()
