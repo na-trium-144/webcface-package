@@ -65,10 +65,10 @@ jobs:
     needs: [build]
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/download-artifact@v3
-        with:
-          name: nsis-Win32
-          path: ${{github.workspace}}/artifact
+      # - uses: actions/download-artifact@v3
+      #   with:
+      #     name: nsis-Win32
+      #     path: ${{github.workspace}}/artifact
       - uses: actions/download-artifact@v3
         with:
           name: nsis-x64
