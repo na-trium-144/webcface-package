@@ -33,20 +33,8 @@ install(DIRECTORY ${WEBCFACE_INSTALL_DEBUG}/lib/
     DESTINATION lib
 )
 
-install(DIRECTORY ${OpenCV_DIR}/../bin/
-    DESTINATION bin
-)
-install(DIRECTORY ${OpenCV_DIR}/
-    DESTINATION lib
-)
-install(DIRECTORY ${OpenCV_DIR}/../../../include/
-    DESTINATION include
-)
-install(DIRECTORY ${OpenCV_DIR}/../../../etc/
-    DESTINATION share/webcface/3rd-party/opencv
-)
-install(FILES ${OpenCV_DIR}/../../../LICENSE
-    DESTINATION share/webcface/3rd-party/opencv
+install(DIRECTORY ${OpenCV_DIR}/../../../
+    DESTINATION opencv
 )
 
 FetchContent_Declare(webcface-tools
