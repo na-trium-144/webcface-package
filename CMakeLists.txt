@@ -33,6 +33,9 @@ install(DIRECTORY ${WEBCFACE_INSTALL_DEBUG}/lib/
     DESTINATION lib
 )
 
+install(DIRECTORY ${OpenCV_DIR}/../bin/
+    DESTINATION bin
+)
 install(DIRECTORY ${OpenCV_DIR}/../../../
     DESTINATION opencv
 )
@@ -67,7 +70,7 @@ get_directory_property(WEBCFACE_EXAMPLE_TARGETS_CPACK
 )
 
 # 同じバージョンで再ビルドするとき -1 など
-set(WIN_PACKAGE_VERSION "${WEBCFACE_VERSION_ORG}")
+set(WIN_PACKAGE_VERSION "${WEBCFACE_VERSION_ORG}-1")
 
 FetchContent_Declare(webui
     URL https://github.com/na-trium-144/webcface-webui/releases/download/v${WEBUI_VERSION}/webcface-webui_${WEBUI_VERSION}.tar.gz
