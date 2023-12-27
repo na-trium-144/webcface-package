@@ -1,4 +1,4 @@
-## [1.3.0-1] -2023-12-27
+## [1.3.0-1] - 2023-12-27
 webcface 1.3.0, webui 1.1.0, tools 1.1.7, opencv 4.8.1
 * opencvのdllファイルをwebcfaceのbinにコピーするようにした
 
