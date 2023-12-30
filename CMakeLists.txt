@@ -16,7 +16,7 @@ include(FetchContent)
 
 FetchContent_Declare(webcface
     GIT_REPOSITORY https://github.com/na-trium-144/webcface.git
-    GIT_TAG v1.3.0
+    GIT_TAG v1.3.1
 )
 FetchContent_MakeAvailable(webcface)
 
@@ -70,7 +70,7 @@ get_directory_property(WEBCFACE_EXAMPLE_TARGETS_CPACK
 )
 
 # 同じバージョンで再ビルドするとき -1 など
-set(WIN_PACKAGE_VERSION "${WEBCFACE_VERSION_ORG}-1")
+set(WIN_PACKAGE_VERSION "${WEBCFACE_VERSION_ORG}")
 
 FetchContent_Declare(webui
     URL https://github.com/na-trium-144/webcface-webui/releases/download/v${WEBUI_VERSION}/webcface-webui_${WEBUI_VERSION}.tar.gz
