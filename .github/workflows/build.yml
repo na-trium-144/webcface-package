@@ -51,14 +51,16 @@ jobs:
         -DCMAKE_PREFIX_PATH=c:\tools\opencv\build\x64\vc16\lib
         -DCMAKE_INSTALL_PREFIX=${{github.workspace}}/install_release
     - name: Build and Install Release
-      run: cmake --build ${{github.workspace}}/build --config Release
+      run: cmake --build ${{github.workspace}}/build --config Release -t install
+    - name: Create zip archive
+      run: Compress-Archive install_release\* "build\WebCFace-" + ("${{github.ref}}" -Replace "refs/tags/v","") + "${{matrix.arch}}"
     - name: Create NSIS Package
       working-directory: ${{github.workspace}}/build
       run: cpack -G NSIS
     - uses: actions/upload-artifact@v3
       with:
         name: nsis-${{matrix.arch}}
-        path: ${{github.workspace}}/build/WebCFace-*-${{matrix.arch}}.exe
+        path: ${{github.workspace}}/build/WebCFace-*-${{matrix.arch}}.*
   
   release:
     runs-on: ubuntu-latest
