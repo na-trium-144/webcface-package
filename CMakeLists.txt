@@ -25,7 +25,7 @@ if(CMAKE_BUILD_TYPE STREQUAL Release)
 # Debugを ./install_debug にインストールした後に Releaseのcmake, build, installをする
 set(WEBCFACE_INSTALL_DEBUG ${CMAKE_CURRENT_LIST_DIR}/install_debug)
 install(FILES
-    ${WEBCFACE_INSTALL_DEBUG}/bin/webcfaced.dll
+    ${WEBCFACE_INSTALL_DEBUG}/bin/webcface3d.dll
     ${WEBCFACE_INSTALL_DEBUG}/bin/spdlogd.dll
     DESTINATION bin
 )
