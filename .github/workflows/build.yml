@@ -53,7 +53,7 @@ jobs:
     - name: Build and Install Release
       run: cmake --build ${{github.workspace}}/build --config Release -t install
     - name: Create zip archive
-      run: Compress-Archive install_release\* "build\WebCFace-" + ("${{github.ref}}" -Replace "refs/tags/v","") + "${{matrix.arch}}"
+      run: Compress-Archive install_release\* ("build\WebCFace-" + ("${{github.ref}}" -Replace "refs/tags/v","") + "-${{matrix.arch}}.zip")
     - name: Create NSIS Package
       working-directory: ${{github.workspace}}/build
       run: cpack -G NSIS
