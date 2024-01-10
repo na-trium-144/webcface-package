@@ -16,7 +16,7 @@ include(FetchContent)
 
 FetchContent_Declare(webcface
     GIT_REPOSITORY https://github.com/na-trium-144/webcface.git
-    GIT_TAG v1.3.1
+    GIT_TAG v1.4.0
 )
 FetchContent_MakeAvailable(webcface)
 
