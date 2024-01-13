@@ -42,7 +42,7 @@ install(DIRECTORY ${OpenCV_DIR}/../../../
 
 FetchContent_Declare(webcface-tools
     GIT_REPOSITORY https://github.com/na-trium-144/webcface-tools.git
-    GIT_TAG v1.1.7
+    GIT_TAG v1.2.0
 )
 FetchContent_MakeAvailable(webcface-tools)
 
@@ -70,7 +70,7 @@ get_directory_property(WEBCFACE_EXAMPLE_TARGETS_CPACK
 )
 
 # 同じバージョンで再ビルドするとき -1 など
-set(WIN_PACKAGE_VERSION "${WEBCFACE_VERSION_ORG}")
+set(WIN_PACKAGE_VERSION "${WEBCFACE_VERSION_ORG}-1")
 
 FetchContent_Declare(webui
     URL https://github.com/na-trium-144/webcface-webui/releases/download/v${WEBUI_VERSION}/webcface-webui_${WEBUI_VERSION}.tar.gz
