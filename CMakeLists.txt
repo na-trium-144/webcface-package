@@ -4,9 +4,9 @@ project(webcface-windows
     DESCRIPTION "Web-based RPC & UI Library"
 )
 set(WEBCFACE_TAG 1.4.1)
-set(WEBCFACE_WEBUI_TAG 1.2.0)
+set(WEBCFACE_WEBUI_TAG 1.3.0)
 set(WEBCFACE_TOOLS_TAG 1.2.1)
-set(WEBCFACE_PKG_REVISION "1")
+set(WEBCFACE_PKG_REVISION "2")
 
 set(CMAKE_CXX_STANDARD 20)
 add_compile_options(/utf-8)
@@ -86,9 +86,17 @@ FetchContent_Declare(webui
     SOURCE_DIR ${CMAKE_CURRENT_LIST_DIR}/dist
 )
 FetchContent_Populate(webui)
+FetchContent_Declare(webui-s
+    URL https://github.com/na-trium-144/webcface-webui/releases/download/v${WEBUI_VERSION}/webcface-webui-server_${WEBUI_VERSION}_x64.zip
+    SOURCE_DIR ${CMAKE_CURRENT_LIST_DIR}/webui-server
+)
+FetchContent_Populate(webui-s)
 
 install(DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/dist
     DESTINATION share/webcface
+)
+install(DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/webui-server/
+    DESTINATION webui-server
 )
 
 set(CPACK_VERBATIM_VARIABLES yes)
