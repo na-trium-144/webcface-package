@@ -3,6 +3,11 @@ project(webcface-windows
     HOMEPAGE_URL "https://github.com/na-trium-144/webcface"
     DESCRIPTION "Web-based RPC & UI Library"
 )
+set(WEBCFACE_TAG 1.4.1)
+set(WEBCFACE_WEBUI_TAG 1.2.0)
+set(WEBCFACE_TOOLS_TAG 1.1.7)
+set(WEBCFACE_PKG_REVISION "")
+
 set(CMAKE_CXX_STANDARD 20)
 add_compile_options(/utf-8)
 
@@ -16,7 +21,7 @@ include(FetchContent)
 
 FetchContent_Declare(webcface
     GIT_REPOSITORY https://github.com/na-trium-144/webcface.git
-    GIT_TAG v1.4.0
+    GIT_TAG v${WEBCFACE_TAG}
 )
 FetchContent_MakeAvailable(webcface)
 
@@ -42,11 +47,11 @@ install(DIRECTORY ${OpenCV_DIR}/../../../
 
 FetchContent_Declare(webcface-tools
     GIT_REPOSITORY https://github.com/na-trium-144/webcface-tools.git
-    GIT_TAG v1.2.0
+    GIT_TAG v${WEBCFACE_TOOLS_TAG}
 )
 FetchContent_MakeAvailable(webcface-tools)
 
-set(WEBUI_VERSION 1.1.0)
+set(WEBUI_VERSION ${WEBCFACE_WEBUI_TAG})
 
 get_directory_property(WEBCFACE_VERSION_ORG
     DIRECTORY ${webcface_SOURCE_DIR}
@@ -70,7 +75,11 @@ get_directory_property(WEBCFACE_EXAMPLE_TARGETS_CPACK
 )
 
 # 同じバージョンで再ビルドするとき -1 など
-set(WIN_PACKAGE_VERSION "${WEBCFACE_VERSION_ORG}-1")
+if(WEBCFACE_PKG_REVISION STREQUAL "")
+    set(WIN_PACKAGE_VERSION "${WEBCFACE_VERSION_ORG}")
+else()
+    set(WIN_PACKAGE_VERSION "${WEBCFACE_VERSION_ORG}-${WEBCFACE_PKG_REVISION}")
+endif()
 
 FetchContent_Declare(webui
     URL https://github.com/na-trium-144/webcface-webui/releases/download/v${WEBUI_VERSION}/webcface-webui_${WEBUI_VERSION}.tar.gz
