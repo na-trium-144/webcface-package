@@ -27,24 +27,6 @@ FetchContent_MakeAvailable(webcface)
 
 if(CMAKE_BUILD_TYPE STREQUAL Release)
 
-# Debugを ./install_debug にインストールした後に Releaseのcmake, build, installをする
-set(WEBCFACE_INSTALL_DEBUG ${CMAKE_CURRENT_LIST_DIR}/install_debug)
-install(FILES
-    ${WEBCFACE_INSTALL_DEBUG}/bin/webcface3d.dll
-    ${WEBCFACE_INSTALL_DEBUG}/bin/spdlogd.dll
-    DESTINATION bin
-)
-install(DIRECTORY ${WEBCFACE_INSTALL_DEBUG}/lib/
-    DESTINATION lib
-)
-
-install(DIRECTORY ${OpenCV_DIR}/../bin/
-    DESTINATION bin
-)
-install(DIRECTORY ${OpenCV_DIR}/../../../
-    DESTINATION opencv
-)
-
 FetchContent_Declare(webcface-tools
     GIT_REPOSITORY https://github.com/na-trium-144/webcface-tools.git
     GIT_TAG v${WEBCFACE_TOOLS_TAG}
@@ -72,6 +54,27 @@ get_directory_property(WEBCFACE_VERSION_REVISION
 get_directory_property(WEBCFACE_EXAMPLE_TARGETS_CPACK
     DIRECTORY ${webcface_SOURCE_DIR}
     DEFINITION WEBCFACE_EXAMPLE_TARGETS_CPACK
+)
+get_directory_property(WEBCFACE_SOVERSION
+    DIRECTORY ${webcface_SOURCE_DIR}
+    DEFINITION WEBCFACE_SOVERSION
+)
+# Debugを ./install_debug にインストールした後に Releaseのcmake, build, installをする
+set(WEBCFACE_INSTALL_DEBUG ${CMAKE_CURRENT_LIST_DIR}/install_debug)
+install(FILES
+    ${WEBCFACE_INSTALL_DEBUG}/bin/webcface${WEBCFACE_SOVERSION}d.dll
+    ${WEBCFACE_INSTALL_DEBUG}/bin/spdlogd.dll
+    DESTINATION bin
+)
+install(DIRECTORY ${WEBCFACE_INSTALL_DEBUG}/lib/
+    DESTINATION lib
+)
+
+install(DIRECTORY ${OpenCV_DIR}/../bin/
+    DESTINATION bin
+)
+install(DIRECTORY ${OpenCV_DIR}/../../../
+    DESTINATION opencv
 )
 
 # 同じバージョンで再ビルドするとき -1 など
