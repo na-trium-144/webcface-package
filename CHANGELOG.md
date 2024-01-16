@@ -1,3 +1,7 @@
+## [1.5.0-1] - 2024-01-16
+webcface 1.5.0, webui 1.3.0, tools 1.2.1, opencv 4.9.0
+* webui-serverのショートカットをスタートメニューに追加
+
 ## [1.5.0] - 2024-01-16
 webcface 1.5.0, webui 1.3.0, tools 1.2.1, opencv 4.9.0
 

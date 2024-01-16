@@ -6,7 +6,7 @@ project(webcface-windows
 set(WEBCFACE_TAG 1.5.0)
 set(WEBCFACE_WEBUI_TAG 1.3.0)
 set(WEBCFACE_TOOLS_TAG 1.2.1)
-set(WEBCFACE_PKG_REVISION "")
+set(WEBCFACE_PKG_REVISION "1")
 
 set(CMAKE_CXX_STANDARD 20)
 add_compile_options(/utf-8)
@@ -86,19 +86,19 @@ endif()
 
 FetchContent_Declare(webui
     URL https://github.com/na-trium-144/webcface-webui/releases/download/v${WEBUI_VERSION}/webcface-webui_${WEBUI_VERSION}.tar.gz
-    SOURCE_DIR ${CMAKE_CURRENT_LIST_DIR}/dist
+    SOURCE_DIR ${CMAKE_CURRENT_BINARY_DIR}/dist
 )
 FetchContent_Populate(webui)
 FetchContent_Declare(webui-s
     URL https://github.com/na-trium-144/webcface-webui/releases/download/v${WEBUI_VERSION}/webcface-webui-server_${WEBUI_VERSION}_x64.zip
-    SOURCE_DIR ${CMAKE_CURRENT_LIST_DIR}/webui-server
+    SOURCE_DIR ${CMAKE_CURRENT_BINARY_DIR}/webui-server
 )
 FetchContent_Populate(webui-s)
 
-install(DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/dist
+install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/dist
     DESTINATION share/webcface
 )
-install(DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/webui-server/
+install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/webui-server/
     DESTINATION webui-server
 )
 
@@ -131,6 +131,11 @@ set(CPACK_NSIS_DISPLAY_NAME "WebCFace ${WIN_PACKAGE_VERSION}")
 set(CPACK_NSIS_PACKAGE_NAME "WebCFace")
 set(CPACK_NSIS_MODIFY_PATH on)
 set(CPACK_NSIS_ENABLE_UNINSTALL_BEFORE_INSTALL on)
+
+set(CPACK_NSIS_EXTRA_INSTALL_COMMANDS
+    "CreateShortCut \"$SMPROGRAMS\\$STARTMENU_FOLDER\\WebCFace WebUI (Server).lnk\" \"$INSTDIR\\webui-server\\webcface-webui-server.exe\""
+)
+# nsisの複数の文を書くときは\nを使う?
 
 include(CPack)
 
