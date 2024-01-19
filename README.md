@@ -8,6 +8,9 @@
 
 Visual Studio 2019でx64用にビルドしています。
 
+exeファイルはWebCFaceを Program Files にインストールします。
+zipファイルは任意の場所にWebCFaceを展開して使うことができます。
+
 ## Buildするには
 
 ```sh

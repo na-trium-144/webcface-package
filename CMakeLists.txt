@@ -4,9 +4,9 @@ project(webcface-windows
     DESCRIPTION "Web-based RPC & UI Library"
 )
 set(WEBCFACE_TAG 1.5.2)
-set(WEBCFACE_WEBUI_TAG 1.3.1)
-set(WEBCFACE_TOOLS_TAG 1.2.1)
-set(WEBCFACE_PKG_REVISION "")
+set(WEBCFACE_WEBUI_TAG 1.3.2)
+set(WEBCFACE_TOOLS_TAG 1.3.0)
+set(WEBCFACE_PKG_REVISION "1")
 
 set(CMAKE_CXX_STANDARD 20)
 add_compile_options(/utf-8)
