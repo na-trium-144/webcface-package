@@ -63,6 +63,7 @@ get_directory_property(WEBCFACE_SOVERSION
 set(WEBCFACE_INSTALL_DEBUG ${CMAKE_CURRENT_LIST_DIR}/install_debug)
 install(FILES
     ${WEBCFACE_INSTALL_DEBUG}/bin/webcface${WEBCFACE_SOVERSION}d.dll
+    ${WEBCFACE_INSTALL_DEBUG}/bin/webcface${WEBCFACE_SOVERSION}d.pdb
     ${WEBCFACE_INSTALL_DEBUG}/bin/spdlogd.dll
     DESTINATION bin
 )
