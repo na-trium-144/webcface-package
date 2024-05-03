@@ -1,3 +1,6 @@
+## [1.11.2] - 2024-05-03
+webcface 1.11.2, webui 1.6.0, tools 1.4.4, opencv 4.9.0
+
 ## [1.11.1] - 2024-04-30
 webcface 1.11.1, webui 1.6.0, tools 1.4.4, opencv 4.9.0
 
