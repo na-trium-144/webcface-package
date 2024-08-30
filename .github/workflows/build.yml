@@ -5,17 +5,115 @@ name: Build and Release
 on:
   push:
     tags: []
+  pull_request:
+    branches: []
+
+env:
+  WEBCFACE_TAG: '2.0.4'
+  TOOLS_TAG: '2.0.1'
+  WEBUI_TAG: '1.8.0'
+  RELEASE_TAG: '2.0.4'
 
 jobs:
-  build:
+  zip-linux:
     strategy:
       matrix:
-        arch: [x64]
+        arch: [amd64, arm64, armhf]
+        include:
+        - arch: amd64
+          webui_arch: x64
+        - arch: arm64
+          webui_arch: arm64
+        - arch: armhf
+          webui_arch: armv7l
+    runs-on: ubuntu-latest
+    steps:
+    - name: create webcface_${{env.RELEASE_TAG}}_linux_${{matrix.arch}}.zip
+      run: |
+        curl -LO https://github.com/na-trium-144/webcface/releases/download/v${WEBCFACE_TAG}/libwebcface-linux-${{matrix.arch}}.zip
+        unzip libwebcface*.zip -d dist/
+        curl -LO https://github.com/na-trium-144/webcface-tools/releases/download/v${TOOLS_TAG}/webcface-tools-linux-${{matrix.arch}}.zip
+        unzip webcface-tools*.zip -d dist/
+        curl -LO https://github.com/na-trium-144/webcface-webui/releases/download/v${WEBUI_TAG}/webcface-desktop_${WEBUI_TAG}_linux_${{matrix.webui_arch}}.tar.gz
+        tar zxvf webcface-desktop*.tar.gz
+        mv webcface-desktop_${WEBUI_TAG}_linux_${{matrix.webui_arch}} dist/webcface-desktop
+        curl -LO https://github.com/na-trium-144/webcface-webui/releases/download/v${WEBUI_TAG}/webcface-webui_${WEBUI_TAG}.tar.gz
+        mkdir -p dist/share/webcface
+        cd dist/share/webcface; tar zxvf ../../../webcface-webui*.tar.gz; cd ../../..
+        cd dist
+        zip --symlinks -r ../webcface_${RELEASE_TAG}_linux_${{matrix.arch}}.zip *
+    - uses: actions/upload-artifact@v3
+      with:
+        name: zip-linux-${{matrix.arch}}
+        path: ${{github.workspace}}/webcface_${{env.RELEASE_TAG}}_linux_${{matrix.arch}}.zip
+
+  zip-macos:
+    runs-on: ubuntu-latest
+    steps:
+    - name: create webcface_${{env.RELEASE_TAG}}_macos_universal.zip
+      run: |
+        curl -LO https://github.com/na-trium-144/webcface/releases/download/v${WEBCFACE_TAG}/libwebcface-macos-universal.zip
+        unzip libwebcface*.zip -d dist/
+        curl -LO https://github.com/na-trium-144/webcface-tools/releases/download/v${TOOLS_TAG}/webcface-tools-macos-universal.zip
+        unzip webcface-tools*.zip -d dist/
+        curl -LO https://github.com/na-trium-144/webcface-webui/releases/download/v${WEBUI_TAG}/webcface-desktop_${WEBUI_TAG}_mac_universal.zip
+        unzip webcface-desktop*.zip -d dist_app/
+        curl -LO https://github.com/na-trium-144/webcface-webui/releases/download/v${WEBUI_TAG}/webcface-webui_${WEBUI_TAG}.tar.gz
+        mkdir -p dist/share/webcface
+        cd dist/share/webcface; tar zxvf ../../../webcface-webui*.tar.gz; cd ../../..
+        cd dist
+        zip --symlinks -r webcface_${RELEASE_TAG}_macos_universal.zip *
+        cd ..
+        
+        cp -a dist/bin/webcface-server dist_app/webcface-desktop.app/Contents/MacOS/
+        cp -a dist/bin/webcface-launcher dist_app/webcface-desktop.app/Contents/MacOS/
+        cp -a dist/lib/libwebcface*.dylib dist_app/webcface-desktop.app/Contents/MacOS/
+        cp -a dist/share/webcface/dist dist_app/webcface-desktop.app/Contents/
+        cd dist_app
+        zip --symlinks -r ../webcface-desktop_${RELEASE_TAG}_macos_app.zip *
+        cd ..
+        
+    - uses: actions/upload-artifact@v3
+      with:
+        name: zip-macos
+        path: ${{github.workspace}}/webcface_${{env.RELEASE_TAG}}_macos_universal.zip
+    - uses: actions/upload-artifact@v3
+      with:
+        name: zip-macos-app
+        path: ${{github.workspace}}/webcface-desktop_${{env.RELEASE_TAG}}_macos_app.zip
+
+  zip-windows:
+    strategy:
+      matrix:
+        arch: [x86, x64]
+    runs-on: ubuntu-latest
+    steps:
+    - name: create webcface_${{env.RELEASE_TAG}}_windows_${{matrix.arch}}.zip
+      run: |
+        curl -LO https://github.com/na-trium-144/webcface/releases/download/v${WEBCFACE_TAG}/libwebcface-windows-${{matrix.arch}}.zip
+        unzip libwebcface*.zip -d dist/
+        curl -LO https://github.com/na-trium-144/webcface-tools/releases/download/v${TOOLS_TAG}/webcface-tools-windows-${{matrix.arch}}.zip
+        unzip webcface-tools*.zip -d dist/
+        curl -LO https://github.com/na-trium-144/webcface-webui/releases/download/v${WEBUI_TAG}/webcface-desktop_${WEBUI_TAG}_win_ia32.zip
+        unzip webcface-desktop*.zip -d dist/webcface-desktop/
+        curl -LO https://github.com/na-trium-144/webcface-webui/releases/download/v${WEBUI_TAG}/webcface-webui_${WEBUI_TAG}.tar.gz
+        mkdir -p dist/share/webcface
+        cd dist/share/webcface; tar zxvf ../../../webcface-webui*.tar.gz; cd ../../..
+        cd dist
+        zip --symlinks -r ../webcface_${RELEASE_TAG}_windows_${{matrix.arch}}.zip *
+    - uses: actions/upload-artifact@v3
+      with:
+        name: zip-windows-${{matrix.arch}}
+        path: ${{github.workspace}}/webcface_${{env.RELEASE_TAG}}_windows_${{matrix.arch}}.zip
+
+  nsis-windows:
+    strategy:
+      matrix:
+        arch: [x86, x64]
+    needs: [zip-windows]
     runs-on: windows-2019
     steps:
     - uses: actions/checkout@v4
-      with:
-        submodules: "recursive"
     - name: Install NSIS
       run: |
         iwr -useb get.scoop.sh -outfile 'install.ps1'
@@ -23,62 +121,24 @@ jobs:
         scoop update
         scoop bucket add extras
         scoop install nsis
-    - name: Install OpenCV
-      # if: matrix.dep == 'with-opencv'
-      uses: crazy-max/ghaction-chocolatey@v3
-      with:
-        args: install -y opencv
-    - name: Add opencv to path
-      # if: matrix.dep == 'with-opencv'
-      run: echo "c:\tools\opencv\build\x64\vc16\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
-    
-    - name: Configure CMake Debug
-      run: >
-        cmake -B ${{github.workspace}}/build
-        -A${{matrix.arch}}
-        -DARCH=${{matrix.arch}}
-        -DCMAKE_BUILD_TYPE=Debug
-        -DCMAKE_PREFIX_PATH=c:\tools\opencv\build\x64\vc16\lib
-        -DCMAKE_INSTALL_PREFIX=${{github.workspace}}/install_debug
-    - name: Build and Install Debug
-      run: cmake --build ${{github.workspace}}/build --config Debug -t install
-    - name: Configure CMake Release
-      run: >
-        cmake -B ${{github.workspace}}/build
-        -A${{matrix.arch}}
-        -DARCH=${{matrix.arch}}
-        -DCMAKE_BUILD_TYPE=Release
-        -DCMAKE_PREFIX_PATH=c:\tools\opencv\build\x64\vc16\lib
-        -DCMAKE_INSTALL_PREFIX=${{github.workspace}}/install_release
-    - name: Build and Install Release
-      run: cmake --build ${{github.workspace}}/build --config Release -t install
-    - name: Create zip archive
-      run: Compress-Archive install_release\* ("build\WebCFace-" + ("${{github.ref}}" -Replace "refs/tags/v","") + "-${{matrix.arch}}.zip")
-    - name: Create NSIS Package
-      working-directory: ${{github.workspace}}/build
-      run: cpack -G NSIS
-    - uses: actions/upload-artifact@v3
-      with:
-        name: nsis-${{matrix.arch}}
-        path: ${{github.workspace}}/build/WebCFace-*-${{matrix.arch}}.*
   
-  release:
-    runs-on: ubuntu-latest
-    needs: [build]
-    steps:
-      - uses: actions/checkout@v4
-      # - uses: actions/download-artifact@v3
-      #   with:
-      #     name: nsis-Win32
-      #     path: ${{github.workspace}}/artifact
-      - uses: actions/download-artifact@v3
-        with:
-          name: nsis-x64
-          path: ${{github.workspace}}/artifact
-      - name: Release
-        uses: docker://antonyurchenko/git-release:v5
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          ALLOW_EMPTY_CHANGELOG: true
-        with:
-          args: artifact/*
+  # release:
+  #   runs-on: ubuntu-latest
+  #   needs: [build]
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     # - uses: actions/download-artifact@v3
+  #     #   with:
+  #     #     name: nsis-Win32
+  #     #     path: ${{github.workspace}}/artifact
+  #     - uses: actions/download-artifact@v3
+  #       with:
+  #         name: nsis-x64
+  #         path: ${{github.workspace}}/artifact
+  #     - name: Release
+  #       uses: docker://antonyurchenko/git-release:v5
+  #       env:
+  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  #         ALLOW_EMPTY_CHANGELOG: true
+  #       with:
+  #         args: artifact/*
