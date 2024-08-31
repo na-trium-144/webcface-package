@@ -5,8 +5,6 @@ name: Build and Release
 on:
   push:
     tags: []
-  pull_request:
-    branches: []
 
 env:
   WEBCFACE_TAG: '2.0.4'
@@ -62,7 +60,7 @@ jobs:
         mkdir -p dist/share/webcface
         cd dist/share/webcface; tar zxvf ../../../webcface-webui*.tar.gz; cd ../../..
         cd dist
-        zip --symlinks -r webcface_${RELEASE_TAG}_macos_universal.zip *
+        zip --symlinks -r ../webcface_${RELEASE_TAG}_macos_universal.zip *
         cd ..
         
         cp -a dist/bin/webcface-server dist_app/webcface-desktop.app/Contents/MacOS/
@@ -135,23 +133,51 @@ jobs:
         name: nsis-windows-${{matrix.arch}}
         path: ${{github.workspace}}/webcface_${{env.RELEASE_TAG}}_windows_${{matrix.arch}}.exe
 
-  # release:
-  #   runs-on: ubuntu-latest
-  #   needs: [build]
-  #   steps:
-  #     - uses: actions/checkout@v4
-  #     # - uses: actions/download-artifact@v3
-  #     #   with:
-  #     #     name: nsis-Win32
-  #     #     path: ${{github.workspace}}/artifact
-  #     - uses: actions/download-artifact@v3
-  #       with:
-  #         name: nsis-x64
-  #         path: ${{github.workspace}}/artifact
-  #     - name: Release
-  #       uses: docker://antonyurchenko/git-release:v5
-  #       env:
-  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  #         ALLOW_EMPTY_CHANGELOG: true
-  #       with:
-  #         args: artifact/*
+  release:
+    runs-on: ubuntu-latest
+    needs: [zip-linux, zip-macos, zip-windows, nsis-windows]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v3
+        with:
+          name: zip-linux-amd64
+          path: ${{github.workspace}}/artifact
+      - uses: actions/download-artifact@v3
+        with:
+          name: zip-linux-arm64
+          path: ${{github.workspace}}/artifact
+      - uses: actions/download-artifact@v3
+        with:
+          name: zip-linux-armhf
+          path: ${{github.workspace}}/artifact
+      - uses: actions/download-artifact@v3
+        with:
+          name: zip-macos
+          path: ${{github.workspace}}/artifact
+      - uses: actions/download-artifact@v3
+        with:
+          name: zip-macos-app
+          path: ${{github.workspace}}/artifact
+      - uses: actions/download-artifact@v3
+        with:
+          name: zip-windows-x86
+          path: ${{github.workspace}}/artifact
+      - uses: actions/download-artifact@v3
+        with:
+          name: zip-windows-x64
+          path: ${{github.workspace}}/artifact
+      - uses: actions/download-artifact@v3
+        with:
+          name: nsis-windows-x86
+          path: ${{github.workspace}}/artifact
+      - uses: actions/download-artifact@v3
+        with:
+          name: nsis-windows-x64
+          path: ${{github.workspace}}/artifact
+      - name: Release
+        uses: docker://antonyurchenko/git-release:v5
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ALLOW_EMPTY_CHANGELOG: true
+        with:
+          args: artifact/*
