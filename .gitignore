@@ -1,8 +1,2 @@
-dist/
-*.tar.gz
-*.tmp
-.vs/
-build/
-out/
-CMakeSettings.json
-/install_*/
+/webcface/
+*.exe
