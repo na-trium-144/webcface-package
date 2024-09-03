@@ -7,10 +7,10 @@ on:
     tags: []
 
 env:
-  WEBCFACE_TAG: '2.0.4'
+  WEBCFACE_TAG: '2.0.5'
   TOOLS_TAG: '2.0.1'
   WEBUI_TAG: '1.8.0'
-  RELEASE_TAG: '2.0.4'
+  RELEASE_TAG: '2.0.5'
 
 jobs:
   zip-linux:
