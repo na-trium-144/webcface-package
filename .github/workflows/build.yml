@@ -8,9 +8,9 @@ on:
 
 env:
   WEBCFACE_TAG: '2.4.1'
-  TOOLS_TAG: '2.1.0'
+  TOOLS_TAG: '2.1.1'
   WEBUI_TAG: '1.10.0'
-  RELEASE_TAG: '2.4.1-1'
+  RELEASE_TAG: '2.4.1-2'
 
 jobs:
   zip-linux:
