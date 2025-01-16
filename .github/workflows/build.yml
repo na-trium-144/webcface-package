@@ -235,4 +235,4 @@ jobs:
           push: true
           tags: |
             ghcr.io/na-trium-144/webcface-package/webcface-${{matrix.arch}}:latest
-            ghcr.io/na-trium-144/webcface-package/webcface-${{matrix.arch}}:${{env.RELEASE_TAG}}
+            ghcr.io/na-trium-144/webcface-package/webcface-${{matrix.arch}}:v${{env.RELEASE_TAG}}
