@@ -40,7 +40,7 @@ jobs:
         cd dist/share/webcface; tar zxvf ../../../webcface-webui*.tar.gz; cd ../../..
         cd dist
         zip --symlinks -r ../webcface_${RELEASE_TAG}_linux_${{matrix.arch}}.zip *
-    - uses: actions/upload-artifact@v3
+    - uses: actions/upload-artifact@v4
       with:
         name: zip-linux-${{matrix.arch}}
         path: ${{github.workspace}}/webcface_${{env.RELEASE_TAG}}_linux_${{matrix.arch}}.zip
@@ -71,11 +71,11 @@ jobs:
         zip --symlinks -r ../webcface-desktop_${RELEASE_TAG}_macos_app.zip *
         cd ..
         
-    - uses: actions/upload-artifact@v3
+    - uses: actions/upload-artifact@v4
       with:
         name: zip-macos
         path: ${{github.workspace}}/webcface_${{env.RELEASE_TAG}}_macos_universal.zip
-    - uses: actions/upload-artifact@v3
+    - uses: actions/upload-artifact@v4
       with:
         name: zip-macos-app
         path: ${{github.workspace}}/webcface-desktop_${{env.RELEASE_TAG}}_macos_app.zip
@@ -99,7 +99,7 @@ jobs:
         cd dist/share/webcface; tar zxvf ../../../webcface-webui*.tar.gz; cd ../../..
         cd dist
         zip --symlinks -r ../webcface_${RELEASE_TAG}_windows_${{matrix.arch}}.zip *
-    - uses: actions/upload-artifact@v3
+    - uses: actions/upload-artifact@v4
       with:
         name: zip-windows-${{matrix.arch}}
         path: ${{github.workspace}}/webcface_${{env.RELEASE_TAG}}_windows_${{matrix.arch}}.zip
@@ -122,13 +122,13 @@ jobs:
       run: |
         Invoke-WebRequest https://nsis.sourceforge.io/mediawiki/images/7/7f/EnVar_plugin.zip -OutFile EnVar_plugin.zip
         Expand-Archive EnVar_plugin.zip -DestinationPath "C:\Program Files (x86)\NSIS"
-    - uses: actions/download-artifact@v3
+    - uses: actions/download-artifact@v4
       with:
         name: zip-windows-${{matrix.arch}}
         path: ${{github.workspace}}
     - run: Expand-Archive -Path webcface_${{env.RELEASE_TAG}}_windows_${{matrix.arch}}.zip -DestinationPath webcface
     - run: makensis install_${{matrix.arch}}.nsi
-    - uses: actions/upload-artifact@v3
+    - uses: actions/upload-artifact@v4
       with:
         name: nsis-windows-${{matrix.arch}}
         path: ${{github.workspace}}/webcface_${{env.RELEASE_TAG}}_windows_${{matrix.arch}}.exe
@@ -138,39 +138,39 @@ jobs:
     needs: [zip-linux, zip-macos, zip-windows, nsis-windows]
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: zip-linux-amd64
           path: ${{github.workspace}}/artifact
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: zip-linux-arm64
           path: ${{github.workspace}}/artifact
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: zip-linux-armhf
           path: ${{github.workspace}}/artifact
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: zip-macos
           path: ${{github.workspace}}/artifact
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: zip-macos-app
           path: ${{github.workspace}}/artifact
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: zip-windows-x86
           path: ${{github.workspace}}/artifact
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: zip-windows-x64
           path: ${{github.workspace}}/artifact
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: nsis-windows-x86
           path: ${{github.workspace}}/artifact
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: nsis-windows-x64
           path: ${{github.workspace}}/artifact
