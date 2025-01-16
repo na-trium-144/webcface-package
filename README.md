@@ -11,10 +11,11 @@ Refer to the README of WebCFace for details.
 ## Docker
 
 You can also pull and run `webcface-server` and tools using Docker.
+The image is released as [ghcr.io/na-trium-144/webcface-package/webcface-amd64](ghcr.io/na-trium-144/webcface-package/webcface-amd64).
+For arm64 or armhf, replace `amd64` in the image name.
 
 ### webcface-server
 
-* For arm64 or armhf, replace `amd64` in the image name.
 * Example (TCP and Unix Socket)
 ```sh
 docker run --rm \
@@ -25,7 +26,6 @@ docker run --rm \
 
 ### webcface-tools
 
-* For arm64 or armhf, replace `amd64` in the image name.
 * Example (Unix Socket)
 ```sh
 docker run --rm \
