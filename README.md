@@ -40,3 +40,10 @@ docker run --rm \
     ghcr.io/na-trium-144/webcface-package/webcface-amd64:latest \
     webcface-ls -a host.docker.internal
 ```
+
+## Release
+
+* .github/build.yml のタグと CHANGELOG.md と install.nsh を更新してタグをつけてpush
+* webcfaceリポジトリのほうの
+    * install.sh の DEFAULT_VERSION, AVAILABLE_VERSIONS, case文を更新
+    * READMEを更新
