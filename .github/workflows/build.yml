@@ -83,7 +83,7 @@ jobs:
   zip-windows:
     strategy:
       matrix:
-        arch: [x86, x64]
+        arch: [x86, x64, arm64]
     runs-on: ubuntu-latest
     steps:
     - name: create webcface_${{env.RELEASE_TAG}}_windows_${{matrix.arch}}.zip
@@ -107,9 +107,9 @@ jobs:
   nsis-windows:
     strategy:
       matrix:
-        arch: [x86, x64]
+        arch: [x86, x64, arm64]
     needs: [zip-windows]
-    runs-on: windows-2019
+    runs-on: windows-2022
     steps:
     - uses: actions/checkout@v4
     - name: Install NSIS
@@ -168,11 +168,19 @@ jobs:
           path: ${{github.workspace}}/artifact
       - uses: actions/download-artifact@v4
         with:
+          name: zip-windows-arm64
+          path: ${{github.workspace}}/artifact
+      - uses: actions/download-artifact@v4
+        with:
           name: nsis-windows-x86
           path: ${{github.workspace}}/artifact
       - uses: actions/download-artifact@v4
         with:
           name: nsis-windows-x64
+          path: ${{github.workspace}}/artifact
+      - uses: actions/download-artifact@v4
+        with:
+          name: nsis-windows-arm64
           path: ${{github.workspace}}/artifact
       - name: Release
         uses: docker://antonyurchenko/git-release:v5
