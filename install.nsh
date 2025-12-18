@@ -3,7 +3,7 @@
 ; https://nsis.sourceforge.io/EnVar_plug-in
 ; https://stackoverflow.com/questions/719631/how-do-i-require-user-to-uninstall-previous-version-with-nsis
 
-!define RELEASE_TAG "3.2.1"
+!define RELEASE_TAG "3.3.0"
 !define LNK_NAME "WebCFace Desktop ${RELEASE_TAG} (${ARCH})"
 !define UNINSTALL_REG "Software\Microsoft\Windows\CurrentVersion\Uninstall\webcface_${ARCH}"
 !define INSTALLDIR_REG "Software\webcface_${ARCH}"
